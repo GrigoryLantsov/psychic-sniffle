@@ -20,3 +20,6 @@ jobs:
 
       - name: Build Go Application
         run: go build -o main .
+
+      - name: docker build
+        run: docker build . -t kaligrir/test:latest
