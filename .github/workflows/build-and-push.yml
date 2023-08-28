@@ -23,7 +23,7 @@ jobs:
       - name: Build Go Application
         run: go build -o main .
 
-  build image:
+  build_image:
     runs-on: ubuntu-latest
     
     steps:
