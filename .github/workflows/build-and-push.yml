@@ -22,20 +22,29 @@ jobs:
 
       - name: Build Go Application
         run: go build -o main .
+      
+      - uses: actions/upload-artifact@master
+        with:
+          name: main
+          path: ./main
 
-  build_image:
+  build_push_image:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - uses: actions/download-artifact@master
+        with:
+          name: main
+          path: ./main
+
       - name: docker login
         run: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
       - name: docker build
         run: docker build . -t ${DOCKER_USERNAME}/test:latest
  
-  push_image:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: docker push
         run: docker push ${DOCKER_USERNAME}/test:latest
