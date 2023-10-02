@@ -64,14 +64,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Set Up SSH
+      
+      - name: Setup SSH
         run: |
-          echo "$SSH_PRIVATE_KEY" > private.key
-          sudo chmod 400 private.key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: SSH into remote host
         run: |
-          eval `ssh-agent -s`
-          ssh-add private.key
-          ssh sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
+          ssh -i ~/.ssh/id_rsa sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
