@@ -58,6 +58,8 @@ jobs:
   deploy:
     needs: build_push_image
     runs-on: ubuntu-latest
+    env: 
+      SSH_PRIVATE_KEY: ${{ secrets.APTIBLE_GIT_SSH_KEY }}
 
     steps:
       - name: Checkout Code
