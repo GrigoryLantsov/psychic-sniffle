@@ -6,6 +6,9 @@ env:
   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
