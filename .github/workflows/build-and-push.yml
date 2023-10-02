@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Set Up SSH
-        uses: webfactory/ssh-agent@v0.4.1
+        uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${SSH_PRIVATE_KEY}
 
