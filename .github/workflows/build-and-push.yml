@@ -51,10 +51,10 @@ jobs:
         run: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
 
       - name: docker build
-        run: docker build . -t ${DOCKER_USERNAME}/test:latest
+        run: docker build . -t ${DOCKER_USERNAME}/test:${GITHUB_SHA}
  
       - name: docker push
-        run: docker push ${DOCKER_USERNAME}/test:ubuntu-latest
+        run: docker push ${DOCKER_USERNAME}/test:${GITHUB_SHA}
   deploy:
     needs: build_push_image
     runs-on: ubuntu-latest
@@ -70,4 +70,4 @@ jobs:
 
       - name: SSH into remote host
         run: |
-          ssh sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:ubuntu-latest"
+          ssh sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
