@@ -62,12 +62,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      
+
       - name: Set Up SSH
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${SSH_PRIVATE_KEY}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private.key
+          sudo chmod 400 private.key
 
       - name: SSH into remote host
         run: |
+          eval `ssh-agent -s`
+          ssh-add private.key
           ssh sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
