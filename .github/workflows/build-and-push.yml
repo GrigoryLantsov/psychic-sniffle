@@ -1,5 +1,5 @@
 name: Build And Push Docker Image via Golang Hello World Application
-env: 
+env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Go Application
         run: go build -o main .
-      
+
       - uses: actions/upload-artifact@master
         with:
           name: main
@@ -37,11 +37,11 @@ jobs:
   build_push_image:
     needs: build_artifact
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      
+
       - uses: actions/download-artifact@master
         with:
           name: main
@@ -52,25 +52,25 @@ jobs:
 
       - name: docker build
         run: docker build . -t ${DOCKER_USERNAME}/test:${GITHUB_SHA}
- 
+
       - name: docker push
         run: docker push ${DOCKER_USERNAME}/test:${GITHUB_SHA}
   deploy:
     needs: build_push_image
     runs-on: ubuntu-latest
-    env: 
+    env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+          ssh-keyscan -t rsa ${REMOTE_HOST} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       - name: SSH into remote host
