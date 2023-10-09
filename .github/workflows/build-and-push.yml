@@ -75,4 +75,4 @@ jobs:
 
       - name: SSH into remote host
         run: |
-          ssh -i ~/.ssh/id_rsa sshtest@${REMOTE_HOST} "docker run -d -p 8080:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
+          ssh -i ~/.ssh/id_rsa sshtest@${REMOTE_HOST} "docker run -d -p 8888:80 ${DOCKER_USERNAME}/test:${GITHUB_SHA}"
